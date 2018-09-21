@@ -1,0 +1,54 @@
+{% extends 'base2.html' %}
+
+{% block style %}
+<style>
+    .btn-primary {
+        max-width: 300px;
+        width:100%;
+        display:block;
+        margin: 50px auto;
+    }
+
+    .btn-primary, .btn-primary:hover, .btn-primary:active {
+        background-color: var(--cred);
+        border-color: var(--cred);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'signup' %}" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="exampleInputName1">İsim</label>
+        <input type="text" class="form-control" id="exampleInputName1"  name="name">
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputSurname1">Soyad</label>
+        <input type="text" class="form-control" id="exampleInputSurname1"  name="surname">
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">Doğum Tarihi</label>
+        <input type="date" class="form-control" id="exampleInputBirthDate1" name="birthdate">
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">Email</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Şifre</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+    </div>
+    <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+</form>
+
+<div style="width:100%; display:flex; justify-content: space-between">
+    <a href="{% url 'login' %}">Giriş yapmak istiyorum.</a>
+    <a href="{% url 'forgotpassword' %}">Şifremi unuttum.</a>
+</div>
+
+{% endblock %}
