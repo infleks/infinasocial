@@ -93,24 +93,51 @@
     .postActionButton:focus {
         outline: 0;
     }
-
 </style>
 
 {% endblock %}
 
 {% block content %}
 
-<form action="{% url 'sendpost' %}" method="POST">
-    {% csrf_token %}
-    <div class="sendPostDiv">
-        <input type="text" name="post" class="form-control" autocomplete="off" placeholder="Bugün İnfina'da neler oldu?"/>
-        <button type="submit"> <i class="fas fa-feather-alt" style="margin-top:4px;margin-left:-1px;"></i> </button>
-    </div>
-</form>
-
 <div class="postsDiv">
+    <div class="postDiv">
+        <img src="/{{p.post.user.photo}}">
+        <div class="postContentDiv">
+            <div class="postContentInfo">
+                <div class="postContentName">
+                    {{p.post.user.name}} {{p.post.user.surname}}
+                </div>
+                <div class="postContentDateTime">
+                    {{p.creationdatetimestr}}
+                </div>
+            </div>
+            <div>
+                {% if p.post.connected != None %}
+                    <a href="{% url 'post' p.post.connected.pk %}"> #{{ p.post.connected.pk }}  </a>
+                {% endif %}
+                {{p.post.content}}
+            </div>
+            <div class="postActionsDiv">
+                <button class="postActionButton" style="color:{{p.likebuttoncolor}};" onclick="upvote('{% url 'upvotepost' p.post.pk %}', this)">
+                    <i class="far fa-thumbs-up">{{p.upvotecount}}</i>
+                </button>
+                <button class="postActionButton" style="font-size: 13px;" data-toggle="dropdown">
+                    <i class="fas fa-angle-down"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    {% for u in p.upvotes %}
+                        <div> {{u.user.name}} {{u.user.surname}} </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    {% for p in posts %}
+<div style="margin: 5px auto; max-width: 600px; font-weight: bold;">Cevaplar</div>
+
+<div class="postsDiv" style="margin-bottom: 20px; margin-top: 10px;">
+    {% for p in comments %}
 
         <div class="postDiv">
             <img src="/{{p.post.user.photo}}"> 
@@ -124,9 +151,6 @@
                     </div> 
                 </div>
                 <div>
-                    {% if p.post.connected != None %}
-                        <a href="{% url 'post' p.post.connected.pk %}"> #{{ p.post.connected.pk }} </a>
-                    {% endif %}
                     {{p.post.content}}
                 </div>
                 <div class="postActionsDiv">
@@ -143,23 +167,31 @@
         </div>
 
     {% endfor %}
-
 </div>
+
+<form action="{% url 'sendpost' %}" method="POST">
+    {% csrf_token %}
+    <div class="sendPostDiv">
+        <input type="hidden" name="connected" value="{{p.post.pk}}">
+        <input type="text" name="post" class="form-control" autocomplete="off" placeholder="Cevapla..." />
+        <button type="submit"> <i class="fas fa-feather-alt" style="margin-top:4px;margin-left:-1px;"></i> </button>
+    </div>
+</form>
 
 {% endblock %}
 
 
 {% block script %}
 <script>
-function upvote(url, element) {
-    if ($(element).css("color") === "rgb(0, 0, 0)" ) {
-        $(element).css("color", "var(--cred)");
-        $($(element).find("i")[0]).text( Number($($(element).find("i")[0]).text())+1);
-    } else {
-        $(element).css("color", "black");
-        $($(element).find("i")[0]).text( Number($($(element).find("i")[0]).text())-1);
+    function upvote(url, element) {
+        if ($(element).css("color") === "rgb(0, 0, 0)" ) {
+            $(element).css("color", "var(--cred)");
+            $($(element).find("i")[0]).text( Number($($(element).find("i")[0]).text())+1);
+        } else {
+            $(element).css("color", "black");
+            $($(element).find("i")[0]).text( Number($($(element).find("i")[0]).text())-1);
+        }
+        $.get(url);
     }
-    $.get(url);
-}
 </script>
 {% endblock %}

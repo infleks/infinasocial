@@ -23,5 +23,8 @@ urlpatterns = [
     path('login/', login, name="login"),
     path('logout/', logout, name="logout"),
     path('signup/', signup, name="signup"),
-    path('forgotpassword/', forgotpassword, name="forgotpassword")
+    path('forgotpassword/', forgotpassword, name="forgotpassword"),
+    path('sendpost/', sendpost, name="sendpost"),
+    path('upvotepost/<int:post_id>', upvotepost, name="upvotepost"),
+    path('post/<int:post_id>', post, name="post"),
 ]
