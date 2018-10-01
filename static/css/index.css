@@ -1,0 +1,134 @@
+.sendPostDiv {
+    display: flex;
+    justify-content: center;
+}
+
+.sendPostDiv>input {
+    max-width: 700px;
+    border-radius: 20px;
+    padding-right: 65px;
+}
+
+.sendPostDiv>button {
+    border-color: var(--cred);
+    border-radius: 50%;
+    background-color: var(--cred);
+    color: white;
+    margin-right: 5px;
+    margin-top: 4px;
+    width: 30px;
+    height: 30px;
+}
+
+.sendPostDiv>div {
+    color: white;
+    margin-left: -60px;
+    margin-top: 8px;
+    z-index: 1;
+}
+
+.sendPostDiv>div>div {
+    max-height: 400px; 
+    overflow-y:scroll; 
+}
+
+.postsDiv {
+    margin-top: 50px;
+}
+
+.postDiv {
+    min-height: 70px;
+    margin: 0px auto;
+    max-width: 600px;
+    display: flex;
+    padding: 10px;
+    box-shadow: 0px 0px 5px gray;
+    margin-bottom: 5px;
+}
+
+.postDiv > img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 1px solid black;
+    margin-right: 5px;
+}
+
+.postContentDiv {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: 100%;
+    padding: 0px 10px;
+}
+
+.postContentDiv > div {
+    word-wrap: break-word;
+}
+
+.postContentInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.postContentName {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.postContentDateTime {
+    font-size: 12px;
+}
+
+.postActionsDiv {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.postActionsDiv > i{
+    margin: 4px 5px;
+    font-size: 15px;
+}
+
+.postActionsDiv > a{
+    margin: 0px 5px;
+    font-size: 15px;
+}
+
+.postActionButton {
+    border : 0px;
+    background: transparent;
+}
+
+.postActionButton:focus {
+    outline: 0;
+}
+
+.dropdown-multiselect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0px auto;
+    padding-left: 0px;
+}
+
+.dropdown-multiselect > li {
+    width: 100%;
+}
+
+.paginationDiv {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.paginationDiv > i {
+    margin-left: 5px;
+    margin-right: 5px;
+}

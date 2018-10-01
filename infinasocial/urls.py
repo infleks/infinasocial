@@ -20,6 +20,7 @@ from app.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name="index"),
+    path('<int:postN>', index1, name="index1"),
     path('login/', login, name="login"),
     path('logout/', logout, name="logout"),
     path('signup/', signup, name="signup"),
@@ -27,4 +28,5 @@ urlpatterns = [
     path('sendpost/', sendpost, name="sendpost"),
     path('upvotepost/<int:post_id>', upvotepost, name="upvotepost"),
     path('post/<int:post_id>', post, name="post"),
+    path('getnotifications', getNotifications, name="getnotifications"),
 ]

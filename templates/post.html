@@ -1,100 +1,8 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block style %}
 
-<style>
-    .sendPostDiv {
-        display: flex;
-        justify-content: center;
-    }
-
-    .sendPostDiv>input {
-        max-width: 700px;
-        border-radius: 20px;
-        padding-right: 35px;
-    }
-
-    .sendPostDiv>button {
-        border-color: var(--cred);
-        border-radius: 50%;
-        background-color: var(--cred);
-        color: white;
-        margin-left: -35px;
-        margin-top: 4px;
-        width: 30px;
-        height: 30px;
-    }
-
-    .postsDiv {
-        margin-top: 50px;
-    }
-
-    .postDiv {
-        min-height: 70px;
-        margin: 0px auto;
-        max-width: 600px;
-        display: flex;
-        padding: 10px;
-        box-shadow: 0px 0px 5px gray;
-        margin-bottom: 5px;
-    }
-
-    .postDiv > img {
-        height: 50px;
-        border-radius: 50%;
-        border: 1px solid black;
-        margin-right: 5px;
-    }
-
-    .postContentDiv {
-        display: flex;
-        flex-direction: column;
-        width:100%;
-        height: 100%;
-        padding: 0px 10px;
-    }
-
-    .postContentInfo {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    .postContentName {
-        font-weight: bold;
-        margin-right: 5px;
-    }
-
-    .postContentDateTime {
-        font-size: 12px;
-    }
-
-    .postActionsDiv {
-        display: flex;
-        flex-direction: row;
-        margin-left: auto;
-        position: relative;
-        right: 5px;
-        bottom: -10px;
-    }
-
-    .postActionsDiv > a > i{
-        margin: 0px 5px;
-        font-size: 15px;
-    }
-
-    .postActionButton {
-        border : 0px;
-        background: transparent;
-    }
-
-    .postActionButton:focus {
-        outline: 0;
-    }
-</style>
-
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -113,21 +21,33 @@
             </div>
             <div>
                 {% if p.post.connected != None %}
-                    <a href="{% url 'post' p.post.connected.pk %}"> #{{ p.post.connected.pk }}  </a>
+                    <a href="{% url 'post' p.post.connected.pk %}" style="text-decoration: underline;"> #{{ p.post.connected.pk }}  </a>
                 {% endif %}
                 {{p.post.content}}
             </div>
             <div class="postActionsDiv">
                 <button class="postActionButton" style="color:{{p.likebuttoncolor}};" onclick="upvote('{% url 'upvotepost' p.post.pk %}', this)">
-                    <i class="far fa-thumbs-up">{{p.upvotecount}}</i>
+                    <i class="far fa-thumbs-up"></i>
                 </button>
-                <button class="postActionButton" style="font-size: 13px;" data-toggle="dropdown">
-                    <i class="fas fa-angle-down"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    {% for u in p.upvotes %}
-                        <div> {{u.user.name}} {{u.user.surname}} </div>
-                    {% endfor %}
+                <div>
+                    <button class="postActionButton" style="font-size: 13px;cursor: pointer;" data-toggle="dropdown" id="upvotes">
+                            {{p.upvotecount}} beğenenler...
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="upvotes">
+                        {% for u in p.upvotes %}
+                            <div> {{u.user.name}} {{u.user.surname}} </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div>
+                    <button class="postActionButton" style="font-size: 13px;cursor: pointer;" data-toggle="dropdown" id="taggeds">
+                        {{p.taggedusercount}} etiketlenenler...
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="taggeds">
+                        {% for u in p.taggedusers %}
+                            <div> {{u.user.name}} {{u.user.surname}} </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -154,13 +74,12 @@
                     {{p.post.content}}
                 </div>
                 <div class="postActionsDiv">
-                    <button class="postActionButton" style="color:{{p.likebuttoncolor}};" onclick="upvote('{% url 'upvotepost' p.post.pk %}', this)">
+                    <button class="postActionButton" style="color:{{p.likebuttoncolor}};cursor: pointer;" onclick="upvote('{% url 'upvotepost' p.post.pk %}', this)">
                         <i class="far fa-thumbs-up">{{p.upvotecount}}</i>
                     </button>
-                    <a href="{% url 'post' p.post.pk %}">
-                        <i class="far fa-comment-dots"> {{p.commentcount}} </i>
-                    </a>
-                    <a href="{% url 'post' p.post.pk %}"><i class="far fa-eye"></i></a>
+                    <i class="far fa-comment-dots"> {{p.commentcount}} </i>
+                    <i class="fas fa-tag">{{p.taggedusercount}}</i>
+                    <a href="{% url 'post' p.post.pk %}"><i class="fas fa-walking"></i></a>
                 </div>
             </div>
 
@@ -172,8 +91,21 @@
 <form action="{% url 'sendpost' %}" method="POST">
     {% csrf_token %}
     <div class="sendPostDiv">
-        <input type="hidden" name="connected" value="{{p.post.pk}}">
-        <input type="text" name="post" class="form-control" autocomplete="off" placeholder="Cevapla..." />
+            <input type="hidden" name="connected" value="{{p.post.pk}}">
+            <input type="text" name="post" class="form-control" autocomplete="off" placeholder="Cevapla..." />
+        <div class="btn-group">
+            <a data-toggle="dropdown" href="#">
+                <i class="fas fa-tag"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <ul class="dropdown-multiselect">
+                        <li class="list-group-item"><input type="checkbox" name="usertagged" value="0">Hepsi</li>
+                    {% for u in users %}
+                        <li class="list-group-item"><input type="checkbox" name="usertagged" value="{{u.pk}}">{{u.name}} {{u.surname}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
         <button type="submit"> <i class="fas fa-feather-alt" style="margin-top:4px;margin-left:-1px;"></i> </button>
     </div>
 </form>
@@ -186,10 +118,8 @@
     function upvote(url, element) {
         if ($(element).css("color") === "rgb(0, 0, 0)" ) {
             $(element).css("color", "var(--cred)");
-            $($(element).find("i")[0]).text( Number($($(element).find("i")[0]).text())+1);
         } else {
             $(element).css("color", "black");
-            $($(element).find("i")[0]).text( Number($($(element).find("i")[0]).text())-1);
         }
         $.get(url);
     }

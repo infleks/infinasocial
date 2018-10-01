@@ -78,7 +78,17 @@
             </a>
 
             <div class="buttonsDiv">
-                <a href="#"> <i class="far fa-bell"></i> </a>
+                <div class="btn-group">
+                        <a data-toggle="dropdown" href="#">
+                            <i class="far fa-bell" id="notificationBell"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" id="notifications">
+                            <a class="dropdown-item" href="#" >Kullanıcı</a>
+                            <a class="dropdown-item" href="#" >Ayarlar</a>
+                            <div class="dropdown-divider" href="#"></div>
+                            <a class="dropdown-item" href="{% url 'logout' %}" >Çıkış</a>
+                        </div>
+                    </div>
                 <a href="#"> <i class="far fa-envelope"></i> </a>
                 <div class="btn-group">
                     <a data-toggle="dropdown" href="#">
@@ -109,6 +119,44 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/main.js' %}" ></script>
+
+    <script>
+        function getNotifications() {
+            $.get("{% url 'getnotifications' %}")
+            .done(function(data){
+                var nfs = [];
+                for (var i=0; i<data['upvotes'].length; i++) {
+                    nfs.push(
+                        "<a class=\"dropdown-item\" href=\"/post/"+data['upvotes'][i][0]+"\" >"+data['upvotes'][i][1]+", bir gönderini beğendi.</a>"
+                    );
+                }
+                for (var i=0; i<data['responseposts'].length; i++) {
+                    nfs.push(
+                        "<a class=\"dropdown-item\" href=\"/post/"+data['responseposts'][i][0]+"\" >"+data['responseposts'][i][1]+", bir gönderini yorumladı.</a>"
+                    );
+                }
+                for (var i=0; i<data['taggedposts'].length; i++) {
+                    nfs.push(
+                        "<a class=\"dropdown-item\" href=\"/post/"+data['taggedposts'][i][0]+"\" >"+data['taggedposts'][i][1]+", seni bir gönderisine etiketledi.</a>"
+                    );
+                }
+                $("#notifications").html(nfs.join(""));
+                var count = data['upvotes'].length+data['responseposts'].length+data['taggedposts'].length;
+                if (count > 0) {
+                    $("#notificationBell").css("color", "var(--cred)");
+                    $("#notificationBell").text(count);
+                } else {
+                    $("#notificationBell").css("color", "black");
+                    $("#notificationBell").text("");  
+                }
+                
+            });
+        }
+
+        getNotifications();
+        setInterval(getNotifications, 300000);
+    </script>
 
     {% block script %}
     {% endblock %}
