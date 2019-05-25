@@ -9,8 +9,7 @@ class User(models.Model):
     email = models.CharField(max_length=128, unique=True)
     password = models.CharField(max_length=32)
     birthdate = models.DateField()
-    photo = models.ImageField(null=True, blank=True,
-                              upload_to="static/uploads/user")
+    photo = models.ImageField(upload_to="static/uploads/user", default="static/uploads/user/noavatar.jpeg")
 
     def checkUser(email, password):
         us = User.objects.filter(email=email, password=password)
